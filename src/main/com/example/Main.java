@@ -3,6 +3,7 @@ package com.example;
 import ligualeo.LinguaLeoService;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class Main {
 
@@ -14,6 +15,7 @@ public class Main {
         withTimeMetric("Pot word", () -> {
             Arrays.stream("hello world it is my first code with java nine".split(" "))
                     .map(linguaLeoService::getTranslations)
+                    .flatMap(translations -> translations.stream().limit(1))
                     .forEach(System.out::println);
 
         });
