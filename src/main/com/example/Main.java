@@ -21,7 +21,9 @@ public class Main {
             }
 
             for (MyFuture<String> future : futures) {
-                System.out.println(future.get());
+                try {
+                    System.out.println(future.get());
+                } catch (Exception e) { /* As a client, I believe that LinguaLeo and mclout will never fail */ }
             }
         });
 
@@ -32,20 +34,22 @@ public class Main {
     static class MyFuture<T> {
         private final Thread thread;
         private final Object[] res = new Object[1];
+        private final Exception[] exception = new Exception[1];
 
         public MyFuture(Callable<T> callable) {
             thread = new Thread(() -> {
                 try {
                     res[0] = callable.call();
-                } catch (Exception e) { /* Could happen, but I am an optimist */ }
+                } catch (Exception e) {
+                    exception[0] = e;
+                }
             });
             thread.start();
         }
 
-        public T get() {
-            try {
-                thread.join();
-            } catch (InterruptedException e) { /* As usually */}
+        public T get() throws Exception {
+            thread.join();
+            if (exception[0] != null) throw exception[0];
             return (T) res[0];
         }
 
