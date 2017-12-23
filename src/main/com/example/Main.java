@@ -2,8 +2,7 @@ package com.example;
 
 import ligualeo.LinguaLeoService;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.FutureTask;
+import java.util.concurrent.*;
 
 public class Main {
 
@@ -16,10 +15,12 @@ public class Main {
             String[] words = "hello world it is my first code with java nine".split(" ");
             FutureTask<String>[] futures = new FutureTask[words.length];
 
+            Executor executorService = Executors.newFixedThreadPool(words.length);
+
             for (int i = 0; i < futures.length; i++) {
                 int n = i;
                 futures[i] = new FutureTask<>(() -> linguaLeoService.getTranslations(words[n]).get(0));
-                futures[i].run();
+                executorService.execute(futures[i]);
             }
 
             for (FutureTask<String> future : futures) {
