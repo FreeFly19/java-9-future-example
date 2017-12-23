@@ -19,6 +19,7 @@ public class Main {
             for (int i = 0; i < futures.length; i++) {
                 int n = i;
                 futures[i] = new FutureTask<>(() -> linguaLeoService.getTranslations(words[n]).get(0));
+                futures[i].run();
             }
 
             for (FutureTask<String> future : futures) {
