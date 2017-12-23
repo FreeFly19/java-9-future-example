@@ -2,6 +2,8 @@ package com.example;
 
 import ligualeo.LinguaLeoService;
 
+import java.util.Arrays;
+
 public class Main {
 
 
@@ -10,20 +12,9 @@ public class Main {
 
 
         withTimeMetric("Pot word", () -> {
-
-
-            linguaLeoService.getTranslations("hello").forEach(System.out::println);
-            linguaLeoService.getTranslations("world").forEach(System.out::println);
-            linguaLeoService.getTranslations("it").forEach(System.out::println);
-            linguaLeoService.getTranslations("is").forEach(System.out::println);
-            linguaLeoService.getTranslations("my").forEach(System.out::println);
-            linguaLeoService.getTranslations("first").forEach(System.out::println);
-            linguaLeoService.getTranslations("code").forEach(System.out::println);
-            linguaLeoService.getTranslations("with").forEach(System.out::println);
-            linguaLeoService.getTranslations("java").forEach(System.out::println);
-            linguaLeoService.getTranslations("nine").forEach(System.out::println);
-
-
+            Arrays.stream("hello world it is my first code with java nine".split(" "))
+                    .map(linguaLeoService::getTranslations)
+                    .forEach(System.out::println);
 
         });
 
