@@ -13,17 +13,16 @@ public class Main {
 
         withTimeMetric("Pot word", () -> {
             String[] words = "hello world it is my first code with java nine".split(" ");
-            FutureTask<String>[] futures = new FutureTask[words.length];
+            Future<String>[] futures = new Future[words.length];
 
             ExecutorService executorService = Executors.newFixedThreadPool(words.length);
 
-            for (int i = 0; i < futures.length; i++) {
+            for (int i = 0; i < words.length; i++) {
                 int n = i;
-                futures[i] = new FutureTask<>(() -> linguaLeoService.getTranslations(words[n]).get(0));
-                executorService.execute(futures[i]);
+                futures[i] = executorService.submit(() -> linguaLeoService.getTranslations(words[n]).get(0));
             }
 
-            for (FutureTask<String> future : futures) {
+            for (Future<String> future : futures) {
                 try {
                     System.out.println(future.get());
                 } catch (Exception e) { /* As a client, I believe that LinguaLeo and mclout will never fail */ }
