@@ -33,15 +33,16 @@ public class Main {
 
     static class MyFuture<T> {
         private final Thread thread;
-        private final Object[] res = new Object[1];
-        private final Exception[] exception = new Exception[1];
+
+        private T result;
+        private Exception exception;
 
         public MyFuture(Callable<T> callable) {
             thread = new Thread(() -> {
                 try {
-                    res[0] = callable.call();
+                    setResult(callable.call());
                 } catch (Exception e) {
-                    exception[0] = e;
+                    setException(e);
                 }
             });
             thread.start();
@@ -49,10 +50,17 @@ public class Main {
 
         public T get() throws Exception {
             thread.join();
-            if (exception[0] != null) throw exception[0];
-            return (T) res[0];
+            if (exception != null) throw exception;
+            return result;
         }
 
+        private void setResult(T res) {
+            this.result = res;
+        }
+
+        private void setException(Exception exception) {
+            this.exception = exception;
+        }
     }
 
 
