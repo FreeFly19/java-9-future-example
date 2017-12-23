@@ -2,8 +2,6 @@ package com.example;
 
 import ligualeo.LinguaLeoService;
 
-import java.util.Arrays;
-
 public class Main {
 
 
@@ -12,11 +10,11 @@ public class Main {
 
 
         withTimeMetric("Pot word", () -> {
-            Arrays.stream("hello world it is my first code with java nine".split(" "))
-                    .parallel()
-                    .map(linguaLeoService::getTranslations)
-                    .flatMap(translations -> translations.stream().limit(1))
-                    .forEach(System.out::println);
+            String[] words = "hello world it is my first code with java nine".split(" ");
+
+            for (String word : words) {
+                System.out.println(linguaLeoService.getTranslations(word).get(0));
+            }
 
         });
 
