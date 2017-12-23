@@ -22,6 +22,7 @@ public class Main {
             Arrays.stream(words)
                     .map(word -> (Callable<String>)(() -> linguaLeoService.getTranslations(word).get(0)))
                     .map(executorService::submit)
+                    .collect(Collectors.toList()).stream()
                     .map(f -> {
                         try {
                             return f.get();
