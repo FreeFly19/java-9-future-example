@@ -13,22 +13,15 @@ public class Main {
 
         withTimeMetric("Pot word", () -> {
             String[] words = "hello world it is my first code with java nine".split(" ");
-            String[] translatedWords = new String[words.length];
-            Thread[] threads = new Thread[words.length];
+            MyFuture<String>[] futures = new MyFuture[words.length];
 
-            for (int i = 0; i < words.length; i++) {
+            for (int i = 0; i < futures.length; i++) {
                 int n = i;
-                threads[i] = new Thread(() -> {
-                    translatedWords[n] = linguaLeoService.getTranslations(words[n]).get(0);
-                });
-                threads[i].start();
+                futures[i] = new MyFuture<>(() -> linguaLeoService.getTranslations(words[n]).get(0));
             }
 
-            for (int i = 0; i < threads.length; i++) {
-                try {
-                    threads[i].join();
-                    System.out.println(translatedWords[i]);
-                } catch (InterruptedException e) { /*will never happen, I hope so*/ }
+            for (MyFuture<String> future : futures) {
+                System.out.println(future.get());
             }
         });
 
