@@ -13,10 +13,13 @@ public class Main {
             String[] words = "hello world it is my first code with java nine".split(" ");
 
             for (String word : words) {
-                System.out.println(linguaLeoService.getTranslations(word).get(0));
+                new Thread(() -> {
+                    System.out.println(linguaLeoService.getTranslations(word).get(0));
+                }).start();
             }
 
         });
+
 
     }
 
