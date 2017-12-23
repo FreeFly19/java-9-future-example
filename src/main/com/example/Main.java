@@ -15,7 +15,7 @@ public class Main {
             String[] words = "hello world it is my first code with java nine".split(" ");
             FutureTask<String>[] futures = new FutureTask[words.length];
 
-            Executor executorService = Executors.newFixedThreadPool(words.length);
+            ExecutorService executorService = Executors.newFixedThreadPool(words.length);
 
             for (int i = 0; i < futures.length; i++) {
                 int n = i;
@@ -28,6 +28,7 @@ public class Main {
                     System.out.println(future.get());
                 } catch (Exception e) { /* As a client, I believe that LinguaLeo and mclout will never fail */ }
             }
+            executorService.shutdown();
         });
 
 
