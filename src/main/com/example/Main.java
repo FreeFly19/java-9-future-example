@@ -2,7 +2,11 @@ package com.example;
 
 import ligualeo.LinguaLeoService;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Main {
 
@@ -13,20 +17,21 @@ public class Main {
 
         withTimeMetric("Pot word", () -> {
             String[] words = "hello world it is my first code with java nine".split(" ");
-            Future<String>[] futures = new Future[words.length];
-
             ExecutorService executorService = Executors.newFixedThreadPool(words.length);
 
-            for (int i = 0; i < words.length; i++) {
-                int n = i;
-                futures[i] = executorService.submit(() -> linguaLeoService.getTranslations(words[n]).get(0));
-            }
+            Arrays.stream(words)
+                    .map(word -> (Callable<String>)(() -> linguaLeoService.getTranslations(word).get(0)))
+                    .map(executorService::submit)
+                    .map(f -> {
+                        try {
+                            return f.get();
+                        } catch (Exception e) {
+                            throw new IllegalStateException(e);
+                        }
+                    })
+                    .forEach(System.out::println);
 
-            for (Future<String> future : futures) {
-                try {
-                    System.out.println(future.get());
-                } catch (Exception e) { /* As a client, I believe that LinguaLeo and mclout will never fail */ }
-            }
+
             executorService.shutdown();
         });
 
