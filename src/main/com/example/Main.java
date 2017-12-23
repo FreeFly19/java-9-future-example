@@ -2,6 +2,8 @@ package com.example;
 
 import ligualeo.LinguaLeoService;
 
+import java.util.concurrent.Callable;
+
 public class Main {
 
 
@@ -34,7 +36,27 @@ public class Main {
 
     }
 
+    static class MyFuture<T> {
+        private final Thread thread;
+        private final Object[] res = new Object[1];
 
+        public MyFuture(Callable<T> callable) {
+            thread = new Thread(() -> {
+                try {
+                    res[0] = callable.call();
+                } catch (Exception e) { /* Could happen, but I am an optimist */ }
+            });
+            thread.start();
+        }
+
+        public T get() {
+            try {
+                thread.join();
+            } catch (InterruptedException e) { /* As usually */}
+            return (T) res[0];
+        }
+
+    }
 
 
 
